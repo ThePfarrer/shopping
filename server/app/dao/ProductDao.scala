@@ -17,8 +17,9 @@ abstract class CartKey {
 
 case class ProductInCart(user: String, productCode: String) extends CartKey
 
-
-class ProductDao @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)(implicit executionContext: ExecutionContext) extends HasDatabaseConfigProvider[JdbcProfile] {
+class ProductDao @Inject() (protected val dbConfigProvider: DatabaseConfigProvider)(implicit
+    executionContext: ExecutionContext
+) extends HasDatabaseConfigProvider[JdbcProfile] {
 
   import profile.api._
 
@@ -30,7 +31,9 @@ class ProductDao @Inject()(protected val dbConfigProvider: DatabaseConfigProvide
 
 }
 
-class CartDao @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)(implicit executionContext: ExecutionContext) extends HasDatabaseConfigProvider[JdbcProfile] {
+class CartDao @Inject() (protected val dbConfigProvider: DatabaseConfigProvider)(implicit
+    executionContext: ExecutionContext
+) extends HasDatabaseConfigProvider[JdbcProfile] {
 
   import profile.api._
 
@@ -58,6 +61,4 @@ class CartDao @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)(
 
   def all(): Future[Seq[CartRow]] = db.run(carts.result)
 
-
 }
-

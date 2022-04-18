@@ -12,6 +12,8 @@ lazy val server = (project in file("server")).settings(commonSettings).settings(
     "com.dripower" %% "play-circe" % "2814.2",
     "org.postgresql" % "postgresql" % "42.3.3",
     "com.typesafe.slick" %% "slick-codegen" % "3.3.3",
+    "io.circe" %% "circe-generic" % "0.14.1",
+    "io.circe" %% "circe-parser" % "0.14.1",
     guice,
     "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % "test"
   ),
