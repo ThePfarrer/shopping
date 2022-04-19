@@ -1,4 +1,4 @@
-package io.fscala.shopping.controllers
+package controllers
 
 import javax.inject._
 
