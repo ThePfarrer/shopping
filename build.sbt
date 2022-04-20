@@ -32,7 +32,9 @@ lazy val client = (project in file("client"))
   .settings(
     scalaJSUseMainModuleInitializer := true,
     libraryDependencies ++= Seq(
-      "org.scala-js" %%% "scalajs-dom" % "1.1.0"
+//      "org.scala-js" %%% "scalajs-dom" % "1.1.0",
+      "com.lihaoyi" %%% "scalatags" % "0.11.1",
+      "com.github.japgolly.scalajs-react" %%% "core" % "2.1.0"
     )
   )
   .enablePlugins(ScalaJSPlugin, ScalaJSWeb)

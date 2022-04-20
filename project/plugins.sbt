@@ -21,3 +21,4 @@ addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "5.2.4")
 
 addSbtPlugin("com.iheart" % "sbt-play-swagger" % "0.10.6-PLAY2.8")
 
+addSbtPlugin("com.github.karasiq" % "sbt-scalajs-bundler" % "1.2.1")

@@ -1,13 +1,14 @@
 package dao
 
+import io.fscala.shopping.client.shared.{Cart, CartKey, Product, ProductInCart}
+import models.{CartTable, ProductsTable}
+
 import javax.inject.Inject
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.jdbc.JdbcProfile
 import slick.jdbc.PostgresProfile.api._
-import models._
 
 import scala.concurrent.{ExecutionContext, Future}
-
 
 class ProductDao @Inject() (protected val dbConfigProvider: DatabaseConfigProvider)(implicit
     executionContext: ExecutionContext
@@ -24,7 +25,6 @@ class ProductDao @Inject() (protected val dbConfigProvider: DatabaseConfigProvid
 class CartDao @Inject() (protected val dbConfigProvider: DatabaseConfigProvider)(implicit
     executionContext: ExecutionContext
 ) extends HasDatabaseConfigProvider[JdbcProfile] {
-
 
   lazy val carts = TableQuery[CartTable]
 

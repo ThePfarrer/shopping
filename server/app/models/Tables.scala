@@ -1,19 +1,7 @@
 package models
 
+import io.fscala.shopping.client.shared.{Cart, Product}
 import slick.jdbc.PostgresProfile.api._
-
-
-/** Entity class storing rows of table Products
-  * @param name
-  *   Database column name SqlType(varchar)
-  * @param code
-  *   Database column code SqlType(varchar), PrimaryKey
-  * @param description
-  *   Database column description SqlType(varchar)
-  * @param price
-  *   Database column price SqlType(float8)
-  */
-case class Product(name: String, code: String, description: String, price: Double)
 
 /** Table description of table products. Objects of this class serve as prototypes for rows in queries. */
 class ProductsTable(tag: Tag) extends Table[Product](tag, "products") {
@@ -32,3 +20,19 @@ class ProductsTable(tag: Tag) extends Table[Product](tag, "products") {
   val price: Rep[Double] = column[Double]("price")
 }
 
+/** Table description of table cart. Objects of this class serve as prototypes for rows in queries. */
+class CartTable(tag: Tag) extends Table[Cart](tag, "cart") {
+  def * = (user, productCode, qty) <> (Cart.tupled, Cart.unapply)
+
+  /** Database column auser SqlType(varchar) */
+  val user: Rep[String] = column[String]("auser")
+
+  /** Database column code SqlType(varchar) */
+  val productCode: Rep[String] = column[String]("code")
+
+  /** Database column qty SqlType(int4) */
+  val qty: Rep[Int] = column[Int]("qty")
+
+  /** Uniqueness Index over (auser,code) (database name uc_cart) */
+  val index1 = index("uc_cart", (user, productCode), unique = true)
+}

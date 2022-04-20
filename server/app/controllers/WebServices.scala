@@ -4,8 +4,8 @@ import dao.{CartDao, ProductDao}
 import io.circe.generic.auto._
 import io.circe.parser._
 import io.circe.syntax._
+import io.fscala.shopping.client.shared.{Cart, Product, ProductInCart}
 import io.swagger.annotations._
-import models.{Cart, ProductInCart, Product}
 import play.api.Logger
 import play.api.libs.circe.Circe
 import play.api.mvc._
@@ -20,7 +20,7 @@ class WebServices @Inject() (cc: ControllerComponents, productDao: ProductDao, c
     extends AbstractController(cc)
     with Circe {
 
-  val logger: Logger = Logger(this.getClass())
+  val logger: Logger = Logger(this.getClass)
 
   val recoverError: PartialFunction[Throwable, Result] = { case e: Throwable =>
     logger.error("Error while writing in the database", e)
@@ -45,7 +45,7 @@ class WebServices @Inject() (cc: ControllerComponents, productDao: ProductDao, c
       new ApiResponse(code = 400, message = "Invalid user name supplied")
     )
   )
-  def login = Action { request =>
+  def login: Action[AnyContent] = Action { request =>
     request.body.asText match {
       case None       => BadRequest
       case Some(user) => Ok.withSession("user" -> user)
@@ -61,7 +61,7 @@ class WebServices @Inject() (cc: ControllerComponents, productDao: ProductDao, c
       new ApiResponse(code = 500, message = "Internal server error, database error")
     )
   )
-  def listCartProducts = Action.async { request =>
+  def listCartProducts: Action[AnyContent] = Action.async { request =>
     val userOption = request.session.get("user")
     userOption match {
       case Some(user) =>
@@ -84,12 +84,12 @@ class WebServices @Inject() (cc: ControllerComponents, productDao: ProductDao, c
   )
   def addCartProduct(
       @ApiParam(name = "id", value = "The product code", required = true) id: String,
-      @ApiParam(name = "quantity", value = "The quantity to add", required = true) quantity: String
-  ) = Action.async { request =>
+      @ApiParam(name = "quantity", value = "The quantity to add", required = true) qty: String
+  ): Action[AnyContent] = Action.async { request =>
     val user = request.session.get("user")
     user match {
       case Some(user) =>
-        val futureInsert = cartDao.insert(Cart(user, id, quantity.toInt))
+        val futureInsert = cartDao.insert(Cart(user, id, qty.toInt))
         futureInsert.map(_ => Ok).recover(recoverError)
 
       case None => Future.successful(Unauthorized)
@@ -104,17 +104,18 @@ class WebServices @Inject() (cc: ControllerComponents, productDao: ProductDao, c
       new ApiResponse(code = 500, message = "Internal server error, database error")
     )
   )
-  def deleteCartProduct(@ApiParam(name = "id", value = "The product code", required = true) id: String) = Action.async {
-    request =>
-      val userOption = request.session.get("user")
-      userOption match {
-        case Some(user) =>
-          logger.info(s"User '$user' is asking to delete the product '$id' from the cart")
-          val futureInsert = cartDao.remove(ProductInCart(user, id))
-          futureInsert.map(_ => Ok).recover(recoverError)
+  def deleteCartProduct(
+      @ApiParam(name = "id", value = "The product code", required = true) id: String
+  ): Action[AnyContent] = Action.async { request =>
+    val userOption = request.session.get("user")
+    userOption match {
+      case Some(user) =>
+        logger.info(s"User '$user' is asking to delete the product '$id' from the cart")
+        val futureInsert = cartDao.remove(ProductInCart(user, id))
+        futureInsert.map(_ => Ok).recover(recoverError)
 
-        case None => Future.successful(Unauthorized)
-      }
+      case None => Future.successful(Unauthorized)
+    }
   }
 
   @ApiOperation(value = "Update a product quantity in the cart", consumes = "text/plain")
@@ -127,12 +128,12 @@ class WebServices @Inject() (cc: ControllerComponents, productDao: ProductDao, c
   )
   def updateCartProduct(
       @ApiParam(name = "id", value = "The product code", required = true, example = "ALD1") id: String,
-      @ApiParam(name = "quantity", value = "The quantity to update", required = true) quantity: String
-  ) = Action.async { request =>
+      @ApiParam(name = "quantity", value = "The quantity to update", required = true) qty: String
+  ): Action[AnyContent] = Action.async { request =>
     val userOption = request.session.get("user")
     userOption match {
       case Some(user) =>
-        val futureInsert = cartDao.update(Cart(user, id, quantity.toInt))
+        val futureInsert = cartDao.update(Cart(user, id, qty.toInt))
         futureInsert.map(_ => Ok).recover(recoverError)
 
       case None => Future.successful(Unauthorized)
@@ -143,7 +144,7 @@ class WebServices @Inject() (cc: ControllerComponents, productDao: ProductDao, c
 
   @ApiOperation(value = "List all the products")
   @ApiResponses(Array(new ApiResponse(code = 200, message = "The list of all the products")))
-  def listProduct = Action.async { request =>
+  def listProduct: Action[AnyContent] = Action.async { request =>
     val futureProducts = productDao.all()
     for (products <- futureProducts) yield Ok(products.asJson)
   }
@@ -166,7 +167,7 @@ class WebServices @Inject() (cc: ControllerComponents, productDao: ProductDao, c
       new ApiResponse(code = 500, message = "Internal server error, database error")
     )
   )
-  def addProduct = Action.async { request =>
+  def addProduct: Action[AnyContent] = Action.async { request =>
     val productOrNot = decode[Product](request.body.asText.getOrElse(""))
     productOrNot match {
       case Right(product) =>
@@ -180,19 +181,3 @@ class WebServices @Inject() (cc: ControllerComponents, productDao: ProductDao, c
     }
   }
 }
-
-//case class EmailMessage(
-//                         @(ApiModelProperty@field)(position = 1,
-//                           dataType = "List[String]", required = true) emails: Seq[String],
-//                         @(ApiModelProperty@field)(position = 2,
-//                           required = true) message: String
-//                       )
-//
-//object Message extends DefaultJsonProtocol {
-//
-//  val EmailMessageForm = Form(
-//    mapping(
-//      "emails" -> seq(nonEmptyText),
-//      "message" -> nonEmptyText
-//    )(EmailMessage.apply)(EmailMessage.unapply)
-//  )}

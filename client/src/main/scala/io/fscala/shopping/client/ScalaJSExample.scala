@@ -1,6 +1,6 @@
-package io.fscala.shopping
+package io.fscala.shopping.client
 
-import io.fscala.shopping.shared.SharedMessages
+import io.fscala.shopping.client.shared.SharedMessages
 import org.scalajs.dom
 
 object ScalaJSExample {

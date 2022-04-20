@@ -1,9 +1,9 @@
 import dao.CartDao
+import io.fscala.shopping.client.shared.{Cart, ProductInCart}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
-import models.{Cart, ProductInCart}
 import org.scalatest.RecoverMethods._
 import org.scalatest.matchers.should.Matchers._
 

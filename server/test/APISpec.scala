@@ -1,11 +1,11 @@
 import io.circe.generic.auto._
 import io.circe.parser._
+import io.fscala.shopping.client.shared.Cart
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.libs.ws.{DefaultWSCookie, WSClient}
 import play.api.test.Helpers._
-import models.Cart
 
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
