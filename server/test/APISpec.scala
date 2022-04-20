@@ -5,7 +5,7 @@ import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.libs.ws.{DefaultWSCookie, WSClient}
 import play.api.test.Helpers._
-import models.Tables.CartRow
+import models.Cart
 
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -82,7 +82,7 @@ class APISpec extends PlaySpec with ScalaFutures with GuiceOneServerPerSuite {
       println(response)
       response.status mustBe OK
 
-      val listOfProduct = decode[Seq[CartRow]](response.body)
+      val listOfProduct = decode[Seq[Cart]](response.body)
       listOfProduct mustBe Right(empty)
     }
 

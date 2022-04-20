@@ -1,10 +1,10 @@
 package controllers
 
-import dao.{CartDao, ProductDao, ProductInCart}
+import dao.{CartDao, ProductDao}
 import io.circe.generic.auto._
 import io.circe.parser._
 import io.circe.syntax._
-import models.Tables._
+import models._
 import play.api.Logger
 import play.api.libs.circe.Circe
 import play.api.mvc._
@@ -50,7 +50,7 @@ class WebServices @Inject() (cc: ControllerComponents, productDao: ProductDao, c
     val user = request.session.get("user")
     user match {
       case Some(user) =>
-        val futureInsert = cartDao.insert(CartRow(1, user, id, quantity.toInt))
+        val futureInsert = cartDao.insert(Cart(user, id, quantity.toInt))
         futureInsert.map(_ => Ok).recover(recoverError)
 
       case None => Future.successful(Unauthorized)
@@ -73,7 +73,7 @@ class WebServices @Inject() (cc: ControllerComponents, productDao: ProductDao, c
     val userOption = request.session.get("user")
     userOption match {
       case Some(user) =>
-        val futureInsert = cartDao.update(CartRow(1, user, id, quantity.toInt))
+        val futureInsert = cartDao.update(Cart(user, id, quantity.toInt))
         futureInsert.map(_ => Ok).recover(recoverError)
 
       case None => Future.successful(Unauthorized)
@@ -87,7 +87,7 @@ class WebServices @Inject() (cc: ControllerComponents, productDao: ProductDao, c
     for (products <- futureProducts) yield Ok(products.asJson)
   }
   def addProduct = Action.async { request =>
-    val productOrNot = decode[ProductsRow](request.body.asText.getOrElse(""))
+    val productOrNot = decode[Product](request.body.asText.getOrElse(""))
     productOrNot match {
       case Right(product) =>
         val futureInsert = productDao.insert(product).recover { case e =>

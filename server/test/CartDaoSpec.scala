@@ -1,14 +1,15 @@
-import dao.{CartDao, ProductInCart}
+import dao.CartDao
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
-import models.Tables.CartRow
+import models.{Cart, ProductInCart}
 import org.scalatest.RecoverMethods._
 import org.scalatest.matchers.should.Matchers._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.language.postfixOps
 
 class CartDaoSpec extends PlaySpec with ScalaFutures with GuiceOneAppPerSuite {
   "CartDao" should {
@@ -24,11 +25,11 @@ class CartDaoSpec extends PlaySpec with ScalaFutures with GuiceOneAppPerSuite {
       val user = "userAdd"
 
       val expected = Set(
-        CartRow(1, user, "ALD1", 1),
-        CartRow(1, user, "BE01", 5)
+        Cart(user, "ALD1", 1),
+        Cart(user, "BE01", 5)
       )
       val noise = Set(
-        CartRow(1, "userNoise", "ALD2", 10)
+        Cart("userNoise", "ALD2", 10)
       )
       val allCarts = expected ++ noise
 
@@ -44,11 +45,11 @@ class CartDaoSpec extends PlaySpec with ScalaFutures with GuiceOneAppPerSuite {
       val dao: CartDao = app2dao(app)
       val user = "userAdd"
       val expected = Set(
-        CartRow(1, user, "ALD1", 1),
-        CartRow(1, user, "BE01", 5)
+        Cart(user, "ALD1", 1),
+        Cart(user, "BE01", 5)
       )
       val noise = Set(
-        CartRow(1, "userNoise", "ALD2", 10)
+        Cart("userNoise", "ALD2", 10)
       )
       val allCarts = expected ++ noise
       val insertFutures = allCarts.map(dao.insert)
@@ -56,17 +57,16 @@ class CartDaoSpec extends PlaySpec with ScalaFutures with GuiceOneAppPerSuite {
 //        recoverToSucceededIf[org.h2.jdbc.JdbcSQLException] {
         Future.sequence(insertFutures)
       }
-      //      recoverToSucceededIf[org.h2.jdbc.JdbcSQLException]
     }
 
     "accept to remove a product from a cart" in {
       val dao: CartDao = app2dao(app)
       val user = "userRmv"
       val initial = Vector(
-        CartRow(1, user, "ALD1", 1),
-        CartRow(1, user, "BE01", 5)
+        Cart(user, "ALD1", 1),
+        Cart(user, "BE01", 5)
       )
-      val expected = Vector(CartRow(1, user, "ALD1", 1))
+      val expected = Vector(Cart(user, "ALD1", 1))
 
       whenReady(Future(initial.map(dao.insert(_)))) { _ =>
         dao.remove(ProductInCart(user, "BE01")).futureValue
@@ -77,11 +77,11 @@ class CartDaoSpec extends PlaySpec with ScalaFutures with GuiceOneAppPerSuite {
     "accept to update quantities of an item in a cart" in {
       val dao: CartDao = app2dao(app)
       val user = "userUpd"
-      val initial = Vector(CartRow(1, user, "ALD1", 1))
-      val expected = Vector(CartRow(1, user, "ALD1", 5))
+      val initial = Vector(Cart(user, "ALD1", 1))
+      val expected = Vector(Cart(user, "ALD1", 5))
 
       whenReady(Future(initial.map(dao.insert(_)))) { _ =>
-        dao.update(CartRow(1, user, "ALD1", 5)).futureValue
+        dao.update(Cart(user, "ALD1", 5)).futureValue
         dao.cart4(user).futureValue should contain theSameElementsAs expected
       }
     }
