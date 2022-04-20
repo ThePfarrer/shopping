@@ -22,3 +22,5 @@ GET   /assets/*file                 controllers.Assets.versioned(path="/public",
 
 ### NoDocs ###
 GET   /docs/swagger-ui/*file        controllers.Assets.at(path:String="/public/lib/swagger-ui", file:String)
+
+GET /v1/swagger.json                   controllers.ApiHelpController.getResources

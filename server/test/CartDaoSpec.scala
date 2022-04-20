@@ -57,6 +57,7 @@ class CartDaoSpec extends PlaySpec with ScalaFutures with GuiceOneAppPerSuite {
 //        recoverToSucceededIf[org.h2.jdbc.JdbcSQLException] {
         Future.sequence(insertFutures)
       }
+      //      recoverToSucceededIf[org.h2.jdbc.JdbcSQLException]
     }
 
     "accept to remove a product from a cart" in {
