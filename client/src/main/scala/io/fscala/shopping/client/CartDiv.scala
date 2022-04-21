@@ -1,6 +1,6 @@
 package io.fscala.shopping.client
 
-import io.fscala.shopping.client.shared.Product
+import io.fscala.shopping.shared.Product
 import org.scalajs.dom.html.Div
 import scalatags.JsDom.all._
 
@@ -24,7 +24,7 @@ case class CartLine(qty: Int, product: Product) {
 
   private def getDeleteButton = button(`type` := "button", onclick := removeFromCart)("X").render
 
-  private def removeFromCart = () => ???
+  private def removeFromCart = () => UIManager.deleteProduct(product)
 
   private def getQuantityInput = input(
     id := s"cart-${product.code}-qty",
@@ -34,7 +34,7 @@ case class CartLine(qty: Int, product: Product) {
     style := "width: 100%;"
   ).render
 
-  private def changeQty = () => ???
+  private def changeQty = () => UIManager.updateProduct(product)
 
   private def getProductLabel = label(product.name).render
 

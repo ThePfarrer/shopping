@@ -1,4 +1,4 @@
-package io.fscala.shopping.client.shared
+package io.fscala.shopping.shared
 
 abstract class CartKey {
   def user: String

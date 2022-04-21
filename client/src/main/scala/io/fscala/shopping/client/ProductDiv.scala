@@ -1,6 +1,6 @@
 package io.fscala.shopping.client
 
-import io.fscala.shopping.client.shared.Product
+import io.fscala.shopping.shared.Product
 import org.scalajs.dom.html.Div
 import scalatags.JsDom.all._
 
@@ -11,6 +11,6 @@ case class ProductDiv(product: Product) {
 
   private def getButton = button(`type` := "button", onclick := addToCart)("Add to Cart")
 
-  private def addToCart = () => ???
+  private def addToCart = () => UIManager.addOneProduct(product)
 
 }

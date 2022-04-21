@@ -1,6 +1,6 @@
 package controllers
 
-import io.fscala.shopping.client.shared.SharedMessages
+import io.fscala.shopping.shared.SharedMessages
 import javax.inject._
 import play.api.mvc._
 

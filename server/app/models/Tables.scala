@@ -1,6 +1,6 @@
 package models
 
-import io.fscala.shopping.client.shared.{Cart, Product}
+import io.fscala.shopping.shared.{Cart, Product}
 import slick.jdbc.PostgresProfile.api._
 
 /** Table description of table products. Objects of this class serve as prototypes for rows in queries. */

@@ -4,7 +4,7 @@ import dao.{CartDao, ProductDao}
 import io.circe.generic.auto._
 import io.circe.parser._
 import io.circe.syntax._
-import io.fscala.shopping.client.shared.{Cart, Product, ProductInCart}
+import io.fscala.shopping.shared.{Cart, Product, ProductInCart}
 import io.swagger.annotations._
 import play.api.Logger
 import play.api.libs.circe.Circe

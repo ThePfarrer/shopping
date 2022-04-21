@@ -1,6 +1,6 @@
 import io.circe.generic.auto._
 import io.circe.parser._
-import io.fscala.shopping.client.shared.Cart
+import io.fscala.shopping.shared.Cart
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite

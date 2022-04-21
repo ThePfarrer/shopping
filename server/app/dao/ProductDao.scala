@@ -1,6 +1,6 @@
 package dao
 
-import io.fscala.shopping.client.shared.{Cart, CartKey, Product, ProductInCart}
+import io.fscala.shopping.shared.{Cart, CartKey, Product, ProductInCart}
 import models.{CartTable, ProductsTable}
 
 import javax.inject.Inject

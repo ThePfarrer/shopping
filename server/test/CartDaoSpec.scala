@@ -1,5 +1,5 @@
 import dao.CartDao
-import io.fscala.shopping.client.shared.{Cart, ProductInCart}
+import io.fscala.shopping.shared.{Cart, ProductInCart}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
