@@ -155,7 +155,7 @@ class WebServices @Inject() (cc: ControllerComponents, productDao: ProductDao, c
       new ApiImplicitParam(
         value = "The product to add",
         required = true,
-        dataType = "java.lang.Class",
+        dataType = "io.fscala.shopping.shared.Product",
         paramType = "body"
       )
     )

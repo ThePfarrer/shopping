@@ -25,6 +25,7 @@ lazy val server = (project in file("server"))
     EclipseKeys.preTasks := Seq(Compile / compile)
   )
   .enablePlugins(PlayScala, SwaggerPlugin)
+  .disablePlugins(PlayFilters)
   .dependsOn(sharedJvm)
 
 lazy val client = (project in file("client"))
@@ -39,8 +40,7 @@ lazy val client = (project in file("client"))
       "io.circe" %%% "circe-parser" % "0.14.1"
     ),
     jsDependencies +=
-      "org.webjars" % "jquery" % "3.6.0" / "jquery.js"
-        minified "jquery.min.js"
+      "org.webjars" % "jquery" % "2.2.1" / "jquery.js" minified "jquery.min.js"
   )
   .enablePlugins(ScalaJSPlugin, ScalaJSWeb, JSDependenciesPlugin)
   .dependsOn(sharedJs)

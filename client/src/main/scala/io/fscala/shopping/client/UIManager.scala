@@ -2,9 +2,12 @@ package io.fscala.shopping.client
 
 import io.circe.generic.auto._
 import io.circe.parser._
+import io.circe.syntax._
+import io.fscala.shopping.shared._
 import org.querki.jquery._
 import org.scalajs.dom
-import io.fscala.shopping.shared._
+import org.scalajs.dom.html.Document
+import org.scalajs.dom.raw.{CloseEvent, Event, MessageEvent, WebSocket}
 
 import scala.scalajs.js.UndefOr
 import scala.util.{Random, Try}
@@ -17,7 +20,7 @@ object UIManager {
   val dummyUserName = s"user-${Random.nextInt(1000)}"
 
   def main(args: Array[String]): Unit = {
-    val settings = JQueryAjaxSettings.url(s"origin/v1/login").data(dummyUserName).contentType("text/plain")
+    val settings = JQueryAjaxSettings.url(s"$origin/v1/login").data(dummyUserName).contentType("text/plain")
     $.post(settings._result).done((_: String) => {
       initUI(origin)
     })
@@ -29,6 +32,7 @@ object UIManager {
         val products = decode[Seq[Product]](answers)
         products.map { seq =>
           seq.foreach(p => $("#products").append(ProductDiv(p).content))
+          initCartUI(origin, seq)
         }
       })
       .fail((xhr: JQueryXHR, textStatus: String, textError: String) =>
