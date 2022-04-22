@@ -16,7 +16,7 @@ object UIManager {
 
   val origin: UndefOr[String] = dom.document.location.origin
   val cart: CartDiv = CartDiv(Set.empty[CartLine])
-//  val webSocket: WebSocket = getWebSocket
+  val webSocket: WebSocket = getWebSocket
   val dummyUserName = s"user-${Random.nextInt(1000)}"
 
   def main(args: Array[String]): Unit = {
@@ -24,6 +24,58 @@ object UIManager {
     $.post(settings._result).done((_: String) => {
       initUI(origin)
     })
+  }
+
+  private def getWebSocket: WebSocket = {
+    val ws = new WebSocket(getWebSocketUri(dom.document, "v1/cart/events"))
+
+    ws.onopen = { (event: Event) =>
+      println(s"webSocket.onOpen '${event.`type`}'")
+      event.preventDefault()
+    }
+
+    ws.onerror = { (event: Event) =>
+      System.err.println(s"webSocket.onError '${event.getClass}'")
+    }
+
+    ws.onmessage = { (event: MessageEvent) =>
+      println(s"[webSocket.onMessage] '${event.data.toString}' ...")
+      val msg = decode[Alarm](event.data.toString)
+      msg match {
+        case Right(alarm) =>
+          println(s"[webSocket.onMessage] Got alarm event: $alarm")
+          notify(alarm)
+
+        case Left(e) =>
+          println(s"[webSocket.onMessage] Got a unknown event: $msg")
+      }
+    }
+
+    ws.onclose = { (event: CloseEvent) =>
+      println(s"webSocket.onClose '${event.`type`}'")
+    }
+    ws
+  }
+
+  private def notify(alarm: Alarm): Unit = {
+    val notifyClass = if (alarm.action == Add) "info" else "warn"
+    NotifyJS.notify(
+      alarm.message,
+      new Options {
+        className = notifyClass
+        globalPosition = "right bottom"
+      }
+    )
+  }
+
+  private def getWebSocketUri(document: Document, context: String): String = {
+    val wsProtocol = {
+      if (dom.document.location.protocol == "https:")
+        "wss"
+      else
+        "ws"
+    }
+    s"$wsProtocol://${dom.document.location.host}/$context"
   }
 
   private def initUI(origin: UndefOr[String]) = {

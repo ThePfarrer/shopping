@@ -16,7 +16,7 @@ lazy val server = (project in file("server"))
       "io.circe" %% "circe-generic" % "0.14.1",
       "io.circe" %% "circe-parser" % "0.14.1",
       guice,
-      "org.webjars" % "swagger-ui" % "3.43.0",
+      "org.webjars" % "swagger-ui" % "4.10.3",
       "com.github.dwickern" %% "swagger-play2.7" % "3.1.0",
       "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % "test"
     ),
@@ -39,8 +39,10 @@ lazy val client = (project in file("client"))
       "io.circe" %%% "circe-generic" % "0.14.1",
       "io.circe" %%% "circe-parser" % "0.14.1"
     ),
-    jsDependencies +=
-      "org.webjars" % "jquery" % "2.2.1" / "jquery.js" minified "jquery.min.js"
+    jsDependencies ++= Seq(
+      "org.webjars" % "jquery" % "3.6.0" / "jquery.js" minified "jquery.min.js",
+      "org.webjars" % "notifyjs" % "0.4.2" / "notify.js"
+    )
   )
   .enablePlugins(ScalaJSPlugin, ScalaJSWeb, JSDependenciesPlugin)
   .dependsOn(sharedJs)
